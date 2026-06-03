@@ -1,0 +1,28 @@
+{
+  "name": "nexusai-server",
+  "version": "1.0.0",
+  "description": "NexusAI - ATS Resume Generator Backend API Server",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "dependencies": {
+    "@google/genai": "^2.7.0",
+    "axios": "^1.7.2",
+    "cloudinary": "^2.2.0",
+    "cors": "^2.8.5",
+    "docx": "^8.5.0",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "express-fileupload": "^1.5.0",
+    "express-rate-limit": "^7.3.1",
+    "mongoose": "^8.4.1",
+    "pdf-parse": "^1.1.1",
+    "puppeteer": "^22.10.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.14"
+  }
+}
