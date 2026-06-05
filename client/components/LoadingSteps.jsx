@@ -84,7 +84,7 @@ export default function LoadingSteps({ currentStep }) {
       {/* Footer loading quote */}
       <div className="mt-8 pt-6 border-t border-neutral-800/80 text-center">
         <span className="text-xs text-neutral-500 italic animate-pulse">
-          "A great resume opens the door; an ATS-optimized one keeps it open."
+          &ldquo;A great resume opens the door; an ATS-optimized one keeps it open.&rdquo;
         </span>
       </div>
     </div>

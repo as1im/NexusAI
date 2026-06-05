@@ -44,11 +44,13 @@ app.get('/api/health', (req, res) => {
 import parseRoutes from './routes/parse.routes.js';
 import generateRoutes from './routes/generate.routes.js';
 import resumeRoutes from './routes/resume.routes.js';
+import authRoutes from './routes/auth.routes.js';
 
 // Register routes
 app.use('/api/parse', parseRoutes);
 app.use('/api/generate', generateRoutes);
 app.use('/api/resumes', resumeRoutes);
+app.use('/api/auth', authRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {

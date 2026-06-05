@@ -11,6 +11,7 @@
   "dependencies": {
     "@google/genai": "^2.7.0",
     "axios": "^1.7.2",
+    "bcryptjs": "^3.0.3",
     "cloudinary": "^2.2.0",
     "cors": "^2.8.5",
     "docx": "^8.5.0",
@@ -18,6 +19,7 @@
     "express": "^4.19.2",
     "express-fileupload": "^1.5.0",
     "express-rate-limit": "^7.3.1",
+    "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.4.1",
     "pdf-parse": "^1.1.1",
     "puppeteer": "^22.10.0"

@@ -10,11 +10,19 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    required: false
   },
   name: {
     type: String,
     trim: true
+  },
+  githubId: {
+    type: String,
+    unique: true,
+    sparse: true
+  },
+  avatarUrl: {
+    type: String
   }
 }, {
   timestamps: true

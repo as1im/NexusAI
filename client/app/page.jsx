@@ -2,12 +2,15 @@
 
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { useSession, signOut } from 'next-auth/react';
 import InputForm from '../components/InputForm';
 import LoadingSteps from '../components/LoadingSteps';
-import { Sparkles, Terminal, Cpu, FileCheck } from 'lucide-react';
+import { Sparkles, Terminal, Cpu, FileCheck, LogOut, History, User } from 'lucide-react';
 
 export default function Home() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [currentStep, setCurrentStep] = useState(0);
 
@@ -15,12 +18,18 @@ export default function Home() {
     setIsLoading(true);
     setCurrentStep(0); // GitHub parsing
 
+    // Prepare auth headers if logged in
+    const headers = { 'Content-Type': 'application/json' };
+    if (session?.accessToken) {
+      headers['Authorization'] = `Bearer ${session.accessToken}`;
+    }
+
     try {
       // Step 1: Parse GitHub Data
       setCurrentStep(0);
       const githubRes = await fetch('http://localhost:5000/api/parse/github', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: headers,
         body: JSON.stringify({ githubUrl: formData.githubUrl })
       });
       const githubData = await githubRes.json();
@@ -31,8 +40,14 @@ export default function Home() {
       const linkedinFormData = new FormData();
       linkedinFormData.append('linkedinPdf', formData.linkedinPdf);
 
+      const linkedinHeaders = {};
+      if (session?.accessToken) {
+        linkedinHeaders['Authorization'] = `Bearer ${session.accessToken}`;
+      }
+
       const linkedinRes = await fetch('http://localhost:5000/api/parse/linkedin', {
         method: 'POST',
+        headers: linkedinHeaders,
         body: linkedinFormData
       });
       const linkedinData = await linkedinRes.json();
@@ -59,7 +74,7 @@ export default function Home() {
       setCurrentStep(4);
       const generateRes = await fetch('http://localhost:5000/api/generate', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: headers,
         body: JSON.stringify({
           profile: mergedProfile,
           jobDescription: formData.jobDescription
@@ -96,21 +111,55 @@ export default function Home() {
 
       {/* Glassmorphic Navbar */}
       <header className="w-full border-b border-neutral-900 bg-neutral-950/70 backdrop-blur-md py-5 px-8 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center gap-2">
+        <Link href="/" className="flex items-center gap-2">
           <div className="bg-gradient-to-tr from-indigo-500 to-violet-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/20">
             <Cpu className="w-5 h-5" />
           </div>
           <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-neutral-200 to-neutral-500 bg-clip-text text-transparent">
             NexusAI
           </span>
-        </div>
+        </Link>
         <nav className="flex items-center gap-6 text-sm font-semibold text-neutral-400">
           <a href="#" className="hover:text-white transition-colors duration-200">How it Works</a>
           <a href="#" className="hover:text-white transition-colors duration-200">Templates</a>
           <span className="text-neutral-800">|</span>
-          <button className="bg-neutral-900 hover:bg-neutral-800 text-white border border-neutral-800 px-4 py-2 rounded-xl transition-all duration-300">
-            Login
-          </button>
+          
+          {status === 'authenticated' ? (
+            <div className="flex items-center gap-4">
+              <Link href="/history" className="flex items-center gap-1.5 hover:text-white transition-colors duration-200">
+                <History className="w-4 h-4" />
+                History
+              </Link>
+              <div className="flex items-center gap-2 bg-neutral-900/60 border border-neutral-800 rounded-full pl-2 pr-4 py-1.5">
+                {session.user.image ? (
+                  <img 
+                    src={session.user.image} 
+                    alt={session.user.name} 
+                    className="w-6 h-6 rounded-full border border-indigo-500/30"
+                  />
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white uppercase">
+                    {session.user.name ? session.user.name.charAt(0) : <User className="w-3.5 h-3.5" />}
+                  </div>
+                )}
+                <span className="text-xs font-medium text-neutral-200">{session.user.name || session.user.email}</span>
+              </div>
+              <button 
+                onClick={() => signOut({ callbackUrl: '/' })}
+                className="flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-800 text-white border border-neutral-800 px-4 py-2 rounded-xl transition-all duration-300"
+              >
+                <LogOut className="w-4 h-4" />
+                Sign Out
+              </button>
+            </div>
+          ) : (
+            <Link 
+              href="/login"
+              className="bg-neutral-900 hover:bg-neutral-800 text-white border border-neutral-800 px-4 py-2 rounded-xl transition-all duration-300"
+            >
+              Login
+            </Link>
+          )}
         </nav>
       </header>
 
