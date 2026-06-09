@@ -10,6 +10,10 @@ const resumeSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  summary: {
+    type: String,
+    required: false
+  },
   personalInfo: {
     name: String,
     email: String,
@@ -32,6 +36,13 @@ const resumeSchema = new mongoose.Schema({
     technologies: [String],
     url: String,
     stars: Number
+  }],
+  education: [{
+    school: String,
+    degree: String,
+    fieldOfStudy: String,
+    startDate: String,
+    endDate: String
   }],
   skills: [String],
   atsScore: {

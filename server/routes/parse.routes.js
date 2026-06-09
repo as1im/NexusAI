@@ -1,22 +1,21 @@
 import express from 'express';
 import { validateGitHubUrl } from '../middleware/validate.middleware.js';
-// We'll import services later, for now we define route stubs
+import { fetchGitHubData } from '../services/github.service.js';
+import { parsePdfContent } from '../services/pdf.service.js';
+import { structureProfile } from '../services/gemini.service.js';
+
 const router = express.Router();
 
 // POST /api/parse/github
 router.post('/github', validateGitHubUrl, async (req, res, next) => {
   try {
     const { githubUrl } = req.body;
-    // TODO: Call github.service to fetch repo list and README info
+    const githubData = await fetchGitHubData(githubUrl);
+    
     res.status(200).json({
       success: true,
-      message: 'GitHub data parsed successfully (stub)',
-      data: {
-        username: githubUrl.split('/').pop(),
-        repositories: [
-          { name: 'example-repo', language: 'JavaScript', stars: 10, description: 'An example repo' }
-        ]
-      }
+      message: 'GitHub data parsed successfully',
+      data: githubData
     });
   } catch (error) {
     next(error);
@@ -34,18 +33,17 @@ router.post('/linkedin', async (req, res, next) => {
     }
 
     const pdfFile = req.files.linkedinPdf;
-    // TODO: Call pdf.service for extraction and gemini.service for formatting
+    
+    // Parse raw text from the uploaded PDF file
+    const rawText = await parsePdfContent(pdfFile.tempFilePath);
+    
+    // Use Gemini AI to structure the unstructured resume text into standard JSON schema
+    const structuredProfile = await structureProfile(rawText);
     
     res.status(200).json({
       success: true,
-      message: 'LinkedIn PDF parsed and structured successfully (stub)',
-      data: {
-        personalInfo: { name: 'John Doe', email: 'john@example.com' },
-        experience: [
-          { company: 'Acme Corp', role: 'Software Engineer', duration: '2 years' }
-        ],
-        skills: ['JavaScript', 'Node.js', 'React']
-      }
+      message: 'LinkedIn PDF parsed and structured successfully',
+      data: structuredProfile
     });
   } catch (error) {
     next(error);

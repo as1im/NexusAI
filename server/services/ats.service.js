@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY
+  apiKey: process.env.GEMINI_API_KEY || 'DUMMY_KEY_FOR_DEV_INITIALIZATION'
 });
 
 const MODEL_NAME = 'gemini-1.5-flash';

@@ -2,16 +2,25 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import { Cpu, ArrowLeft, History, Calendar, FileText, ExternalLink, Award } from 'lucide-react';
 
 export default function HistoryPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [resumes, setResumes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/resumes')
+    if (status !== 'authenticated') return;
+
+    const headers = {};
+    if (session?.accessToken) {
+      headers['Authorization'] = `Bearer ${session.accessToken}`;
+    }
+
+    fetch('http://localhost:5000/api/resumes', { headers })
       .then(res => {
         if (!res.ok) throw new Error('Failed to retrieve history');
         return res.json();
@@ -30,7 +39,7 @@ export default function HistoryPage() {
       .finally(() => {
         setLoading(false);
       });
-  }, []);
+  }, [status, session]);
 
   return (
     <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col justify-between relative overflow-hidden">

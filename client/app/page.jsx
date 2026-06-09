@@ -59,6 +59,7 @@ export default function Home() {
       const mergedProfile = {
         personalInfo: linkedinData.data.personalInfo,
         experience: linkedinData.data.experience,
+        education: linkedinData.data.education || [],
         skills: [...new Set([...(linkedinData.data.skills || []), ...(githubData.data.repositories.map(r => r.language).filter(Boolean))])],
         projects: githubData.data.repositories.slice(0, 5).map(repo => ({
           title: repo.name,

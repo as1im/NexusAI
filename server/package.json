@@ -19,6 +19,7 @@
     "express": "^4.19.2",
     "express-fileupload": "^1.5.0",
     "express-rate-limit": "^7.3.1",
+    "handlebars": "^4.7.9",
     "jsonwebtoken": "^9.0.3",
     "mongoose": "^8.4.1",
     "pdf-parse": "^1.1.1",

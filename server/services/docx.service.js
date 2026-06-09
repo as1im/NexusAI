@@ -9,7 +9,7 @@ import { Document, Packer, Paragraph, TextRun, HeadingLevel, AlignmentType } fro
  */
 export const generateDocxFromData = async (resumeData, outputPath) => {
   try {
-    const { personalInfo = {}, jobTitle = '', summary = '', experience = [], projects = [], skills = [] } = resumeData;
+    const { personalInfo = {}, jobTitle = '', summary = '', experience = [], projects = [], skills = [], education = [] } = resumeData;
 
     // Helper for creating section dividers
     const createSectionHeader = (title) => {
@@ -174,6 +174,36 @@ export const generateDocxFromData = async (resumeData, outputPath) => {
           children: [
             new TextRun({
               text: project.description || 'Developed interactive web applications.',
+              size: 22,
+              font: 'Arial'
+            })
+          ]
+        }));
+      });
+    }
+
+    // 6. Education Section
+    if (education.length > 0) {
+      docChildren.push(createSectionHeader('Education'));
+
+      education.forEach(edu => {
+        docChildren.push(new Paragraph({
+          spacing: { before: 120, after: 60 },
+          children: [
+            new TextRun({
+              text: `${edu.degree || ''} in ${edu.fieldOfStudy || ''} `,
+              bold: true,
+              size: 22,
+              font: 'Arial'
+            }),
+            new TextRun({
+              text: `- ${edu.school || ''} `,
+              italic: true,
+              size: 22,
+              font: 'Arial'
+            }),
+            new TextRun({
+              text: `(${edu.startDate || ''} - ${edu.endDate || ''})`,
               size: 22,
               font: 'Arial'
             })

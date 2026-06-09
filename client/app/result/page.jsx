@@ -2,12 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import { useSession } from 'next-auth/react';
 import AtsScoreCard from '../../components/AtsScoreCard';
 import ResumePreview from '../../components/ResumePreview';
 import { Cpu, ArrowLeft, Download, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
 
 export default function ResultPage() {
   const router = useRouter();
+  const { data: session, status } = useSession();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -17,8 +19,15 @@ export default function ResultPage() {
     const id = params.get('id');
 
     if (id) {
+      if (status !== 'authenticated') return;
+
       setLoading(true);
-      fetch(`http://localhost:5000/api/resumes/${id}`)
+      const headers = {};
+      if (session?.accessToken) {
+        headers['Authorization'] = `Bearer ${session.accessToken}`;
+      }
+
+      fetch(`http://localhost:5000/api/resumes/${id}`, { headers })
         .then(res => {
           if (!res.ok) throw new Error('Failed to retrieve resume details');
           return res.json();
@@ -48,7 +57,7 @@ export default function ResultPage() {
         }
       }
     }
-  }, []);
+  }, [status, session]);
 
   if (loading) {
     return (

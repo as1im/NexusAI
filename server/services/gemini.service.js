@@ -3,10 +3,10 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-// Initialize the Google Gen AI client
-// It will automatically use the GEMINI_API_KEY environment variable.
+// Initialize the Google Gen AI client with a dummy key fallback for initialization.
+// We check for the actual presence of the key in individual service methods before making API requests.
 const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY
+  apiKey: process.env.GEMINI_API_KEY || 'DUMMY_KEY_FOR_DEV_INITIALIZATION'
 });
 
 const MODEL_NAME = 'gemini-1.5-flash';
