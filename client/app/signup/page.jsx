@@ -21,7 +21,7 @@ export default function SignupPage() {
   // Redirect if already authenticated
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/');
+      router.push('/dashboard');
     }
   }, [status, router]);
 
@@ -70,7 +70,7 @@ export default function SignupPage() {
         setError('Registered successfully, but sign in failed. Please login manually.');
         router.push('/login');
       } else {
-        router.push('/');
+        router.push('/dashboard');
         router.refresh();
       }
     } catch (err) {

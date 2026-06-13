@@ -8,8 +8,10 @@ export default withAuth({
 
 export const config = {
   matcher: [
-    "/",
+    "/dashboard/:path*",
+    "/create-resume/:path*",
     "/history/:path*",
+    "/profile/:path*",
     "/result/:path*",
   ]
 };

@@ -2,8 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useSession } from 'next-auth/react';
-import { Cpu, ArrowLeft, History, Calendar, FileText, ExternalLink, Award } from 'lucide-react';
+import { useSession, signOut } from 'next-auth/react';
+import Link from 'next/link';
+import { Cpu, ArrowLeft, History, Calendar, FileText, ExternalLink, Award, User, LogOut } from 'lucide-react';
 
 export default function HistoryPage() {
   const router = useRouter();
@@ -42,28 +43,54 @@ export default function HistoryPage() {
   }, [status, session]);
 
   return (
-    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col justify-between relative overflow-hidden">
+    <div className="min-h-screen bg-neutral-950 text-neutral-100 flex flex-col justify-between relative overflow-hidden font-sans">
       
+      {/* Modern Tech Grid Pattern */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#ffffff03_1px,transparent_1px),linear-gradient(to_bottom,#ffffff03_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_80%_60%_at_50%_0%,#000_80%,transparent_100%)] pointer-events-none" />
+
       {/* Decorative glows */}
       <div className="absolute top-0 right-1/4 w-[400px] h-[400px] bg-indigo-500/5 rounded-full blur-[100px] pointer-events-none" />
 
-      {/* Header */}
-      <header className="w-full border-b border-neutral-900 bg-neutral-950/70 backdrop-blur-md py-5 px-8 flex items-center justify-between sticky top-0 z-50">
-        <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push('/')}>
+      {/* Floating Glassmorphic Navbar */}
+      <header className="mx-auto my-4 max-w-5xl w-[92%] border border-neutral-900 bg-neutral-950/70 backdrop-blur-md py-4 px-6 rounded-2xl flex items-center justify-between sticky top-4 z-50 shadow-2xl shadow-black/80">
+        <Link href="/dashboard" className="flex items-center gap-2">
           <div className="bg-gradient-to-tr from-indigo-500 to-violet-600 p-2 rounded-xl text-white shadow-lg shadow-indigo-500/20">
             <Cpu className="w-5 h-5" />
           </div>
           <span className="font-extrabold text-xl tracking-tight bg-gradient-to-r from-white via-neutral-200 to-neutral-500 bg-clip-text text-transparent">
             NexusAI
           </span>
-        </div>
-        <button
-          onClick={() => router.push('/')}
-          className="text-xs bg-neutral-900 border border-neutral-800 hover:bg-neutral-800 text-neutral-300 font-semibold px-4 py-2.5 rounded-xl flex items-center gap-1.5 transition-all duration-300"
-        >
-          <ArrowLeft className="w-3.5 h-3.5" />
-          Back to Generator
-        </button>
+        </Link>
+        <nav className="flex items-center gap-6 text-sm font-semibold text-neutral-400">
+          <Link href="/dashboard" className="hover:text-white transition-colors duration-200">Dashboard</Link>
+          <Link href="/create-resume" className="hover:text-white transition-colors duration-200">Optimize Resume</Link>
+          <Link href="/history" className="text-white hover:text-white transition-colors duration-200">History</Link>
+          <Link href="/profile" className="hover:text-white transition-colors duration-200">Profile</Link>
+          <span className="text-neutral-800">|</span>
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 bg-neutral-900/60 border border-neutral-800 rounded-full pl-2 pr-4 py-1.5">
+              {session?.user?.image ? (
+                <img 
+                  src={session.user.image} 
+                  alt={session.user.name} 
+                  className="w-6 h-6 rounded-full border border-indigo-500/30"
+                />
+              ) : (
+                <div className="w-6 h-6 rounded-full bg-indigo-600 flex items-center justify-center text-xs font-bold text-white uppercase">
+                  {session?.user?.name ? session.user.name.charAt(0) : <User className="w-3.5 h-3.5" />}
+                </div>
+              )}
+              <span className="text-xs font-medium text-neutral-200">{session?.user?.name || session?.user?.email}</span>
+            </div>
+            <button 
+              onClick={() => signOut({ callbackUrl: '/' })}
+              className="flex items-center gap-1.5 bg-neutral-900 hover:bg-neutral-850 text-white border border-neutral-800 px-4 py-2 rounded-xl transition-all duration-300"
+            >
+              <LogOut className="w-4 h-4" />
+              Sign Out
+            </button>
+          </div>
+        </nav>
       </header>
 
       {/* Main Container */}

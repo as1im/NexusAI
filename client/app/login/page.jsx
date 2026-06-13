@@ -21,7 +21,7 @@ function LoginForm() {
   // Redirect if already authenticated
   useEffect(() => {
     if (status === 'authenticated') {
-      router.push('/');
+      router.push('/dashboard');
     }
   }, [status, router]);
 
@@ -57,7 +57,7 @@ function LoginForm() {
       if (result.error) {
         setError(result.error);
       } else {
-        router.push('/');
+        router.push('/dashboard');
         router.refresh();
       }
     } catch (err) {
@@ -71,7 +71,7 @@ function LoginForm() {
     setIsGithubLoading(true);
     setError('');
     try {
-      await signIn('github', { callbackUrl: '/' });
+      await signIn('github', { callbackUrl: '/dashboard' });
     } catch (err) {
       setError('GitHub authentication failed.');
       setIsGithubLoading(false);

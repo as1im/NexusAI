@@ -23,6 +23,36 @@ const userSchema = new mongoose.Schema({
   },
   avatarUrl: {
     type: String
+  },
+  profile: {
+    phone: { type: String, default: '' },
+    website: { type: String, default: '' },
+    linkedin: { type: String, default: '' },
+    github: { type: String, default: '' },
+    summary: { type: String, default: '' },
+    skills: { type: [String], default: [] },
+    experience: [{
+      company: String,
+      role: String,
+      startDate: String,
+      endDate: String,
+      description: String,
+      highlights: [String]
+    }],
+    projects: [{
+      title: String,
+      description: String,
+      technologies: [String],
+      url: String,
+      stars: Number
+    }],
+    education: [{
+      school: String,
+      degree: String,
+      fieldOfStudy: String,
+      startDate: String,
+      endDate: String
+    }]
   }
 }, {
   timestamps: true
@@ -30,3 +60,4 @@ const userSchema = new mongoose.Schema({
 
 const User = mongoose.model('User', userSchema);
 export default User;
+
